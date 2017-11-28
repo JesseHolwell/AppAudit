@@ -12,56 +12,87 @@ namespace AppAudit
 {
     class Program
     {
-        public static RuleCollection AppRules {get;set;}
+        public static RuleCollection AppRules { get; set; }
 
         static void Main(string[] args)
         {
             //parse the xml file - async?
             AppRules = GetRulesFromXml();
-            
-            //ask for the project directory - async?
-            Console.WriteLine("Enter app location > ");
-            var appLocation = Console.ReadLine();
 
-            //search this location for any relevant files
-            //identified:
-            //web.configs
-            var debugconfig = "web.config";
-            var stagingconfig = "web.staging.config";
-            var releaseconfig = "web.release.config";
+            var proceed = true;
 
-            //app_start
-            //...
-
-            foreach (var path in Directory.GetFiles(appLocation))
+            while (proceed)
             {
+
+                //ask for the project directory - async?
+                Console.WriteLine("Enter app location > ");
+                var appLocation = Console.ReadLine();
+
+                //HACK: 
+                appLocation = @"C:\Users\holweje\Source\Repos\Divestment\Divestment";
+
+                //search this location for any relevant files
+                //identified:
+                //web.configs
+                var files = new List<string>()
+                {
+                    "web.config",
+                    "web.staging.config",
+                    "web.release.config",
+
+                    "global.asax",
+                    "startup.cs",
+                    @"Views\Shared\_Layout.cs"
+                };
+
+                var locatedFiles = Directory.GetFiles(appLocation);
+                //app_start
+                //...
+
+
                 //TODO: better file identification logic?
-                //Console.WriteLine(path); // full path
-                //Console.WriteLine(System.IO.Path.GetFileName(path)); // file name
-                if (path.ToLower().Contains(debugconfig)) 
-                    DebugAnalysis(path, debugconfig);
+                Console.WriteLine("Files found:");
+                foreach (var path in locatedFiles)
+                    Console.WriteLine(path);
+
+                foreach (var path in locatedFiles)
+                    foreach (var config in files)
+                        if (path.ToLower().Contains(config))
+                            AnalyzeFile(path, config);
+
+                //TODO: more graceful loop or exit
+                Console.WriteLine("Exit? (X))");
+                if (Console.ReadLine() == "X")
+                    proceed = false;
+
             }
-
-            //TODO: graceful loop or exit
-            Console.ReadLine();
-
         }
 
-        public static void DebugAnalysis(string path, string file)
+        public static void AnalyzeFile(string path, string file)
         {
             var lines = File.ReadAllLines(path);
 
-            foreach (var rule in AppRules.Rules.Where(x=>x.Location == file))
+            var ruleScope = AppRules.Rules.Where(x => x.Location == file);
+            if (ruleScope.Any())
             {
-                var matched = false;
+                Console.WriteLine("\nAnalyzing: " + path);
+                foreach (var rule in ruleScope)
+                {
+                    var matched = false;
 
-                foreach (var line in lines)
-                    if (Regex.IsMatch(line, rule.Regex))
-                        matched = true;
+                    foreach (var line in lines)
+                        if (Regex.IsMatch(line, rule.Regex))
+                            matched = true;
 
-                Console.WriteLine(rule.Description + ":\t" + matched);
+                    Console.BackgroundColor = (matched) ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
+                    Console.ForegroundColor = (matched) ? ConsoleColor.Green : ConsoleColor.Red;
+
+                    Console.WriteLine(rule.Description + ":\t" + matched);
+
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
-
         }
 
         public static RuleCollection GetRulesFromXml()
