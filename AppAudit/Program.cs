@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace AppAudit
@@ -9,84 +12,76 @@ namespace AppAudit
 
         static void Main(string[] args)
         {
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("============== Do you follow best practices? ==============");
+            Console.ResetColor();
+
             //parse the xml file - async?
             AppRules = GetRulesFromXml();
 
-        //    var proceed = true;
+            var proceed = true;
+            while (proceed)
+            {
 
-        //    while (proceed)
-        //    {
+                //ask for the project directory - async?
+                Console.WriteLine("Enter app location > ");
+                var appLocation = Console.ReadLine();
 
-        //        //ask for the project directory - async?
-        //        Console.WriteLine("Enter app location > ");
-        //        var appLocation = Console.ReadLine();
+                //HACK: 
+                appLocation = @"C:\Users\holweje\Source\Repos\Divestment\Divestment";
 
-        //        //HACK: 
-        //        appLocation = @"C:\Users\holweje\Source\Repos\Divestment\Divestment";
+                var locatedFiles = Directory.GetFiles(appLocation);
 
-        //        //search this location for any relevant files
-        //        //identified:
-        //        //web.configs
-        //        var files = new List<string>()
-        //        {
-        //            "web.config",
-        //            "web.staging.config",
-        //            "web.release.config",
+                //TODO: better file identification logic?
+                Console.WriteLine("=== ANALYZING PROJECT: "
+                    + Path.GetDirectoryName(appLocation) + " ===");
+                Console.WriteLine("Files found:");
+                foreach (var path in locatedFiles)
+                    Console.WriteLine("\t- " + Path.GetFileName(path));
 
-        //            "global.asax",
-        //            "startup.cs",
-        //            @"Views\Shared\_Layout.cs"
-        //        };
+                foreach (var path in locatedFiles)
+                    foreach (var config in AppRules.Files)
+                        if (path.ToLower().Contains(config.Name))
+                            AnalyzeFile(path, config.Name);
 
-        //        var locatedFiles = Directory.GetFiles(appLocation);
-        //        //app_start
-        //        //...
+                //TODO: more graceful loop or exit
+                Console.WriteLine("\nExit? (X))");
+                if (Console.ReadLine() == "X")
+                    proceed = false;
 
+            }
+        }
 
-        //        //TODO: better file identification logic?
-        //        Console.WriteLine("Files found:");
-        //        foreach (var path in locatedFiles)
-        //            Console.WriteLine(path);
+        public static void AnalyzeFile(string path, string filename)
+        {
+            var lines = File.ReadAllLines(path);
 
-        //        foreach (var path in locatedFiles)
-        //            foreach (var config in files)
-        //                if (path.ToLower().Contains(config))
-        //                    AnalyzeFile(path, config);
+            //var ruleScope = AppRules.Rules.Where(x => x.Location == file);
+            foreach (var file in AppRules.Files)
+            {
+                if (file.Name == filename)
+                {
+                    var ruleScope = file.Rules;
+                    if (ruleScope.Length > 0)
+                    {
+                        Console.WriteLine("\nAnalyzing: " + path);
+                        foreach (var rule in ruleScope)
+                        {
+                            var matched = false;
 
-        //        //TODO: more graceful loop or exit
-        //        Console.WriteLine("Exit? (X))");
-        //        if (Console.ReadLine() == "X")
-        //            proceed = false;
+                            foreach (var line in lines)
+                                if (Regex.IsMatch(line, rule.Regex))
+                                    matched = true;
 
-        //    }
-        //}
-
-        //public static void AnalyzeFile(string path, string file)
-        //{
-        //    var lines = File.ReadAllLines(path);
-
-        //    var ruleScope = AppRules.Rules.Where(x => x.Location == file);
-        //    if (ruleScope.Any())
-        //    {
-        //        Console.WriteLine("\nAnalyzing: " + path);
-        //        foreach (var rule in ruleScope)
-        //        {
-        //            var matched = false;
-
-        //            foreach (var line in lines)
-        //                if (Regex.IsMatch(line, rule.Regex))
-        //                    matched = true;
-
-        //            Console.BackgroundColor = (matched) ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
-        //            Console.ForegroundColor = (matched) ? ConsoleColor.Green : ConsoleColor.Red;
-
-        //            Console.WriteLine(rule.Description + ":\t" + matched);
-
-        //            Console.BackgroundColor = ConsoleColor.Black;
-        //            Console.ForegroundColor = ConsoleColor.White;
-        //        }
-        //    }
-
+                            Console.BackgroundColor = (matched) ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
+                            Console.ForegroundColor = (matched) ? ConsoleColor.Green : ConsoleColor.Red;
+                            Console.WriteLine(rule.Description + ":\t" + matched);
+                            Console.ResetColor();
+                        }
+                    }
+                }
+            }
         }
 
         public static FileCollection GetRulesFromXml()
@@ -101,6 +96,4 @@ namespace AppAudit
             return rules;
         }
     }
-
-
 }

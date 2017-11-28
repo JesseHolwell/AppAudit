@@ -30,7 +30,7 @@
       <Rules>
         <Rule Description="Test error">
           <Regex>
-            <![CDATA[Sample staging regex]]>
+            <![CDATA[]]>
           </Regex>
         </Rule>
       </Rules>
