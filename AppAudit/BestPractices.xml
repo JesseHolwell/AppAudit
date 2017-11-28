@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--{
+  string regex { get; set; } //String to match
+  string location { get; set; } //File to search
+  int priority { get; set; } //1-4 priority
+  string description { get; set; } //Explanation
+}-->
+
+<RuleCollection>
+  <Rules>
+    <Rule>
+      <Regex>
+        <![CDATA[Woff2]]>
+      </Regex>
+      <Location>web.config</Location>
+    </Rule>
+    <Rule>
+      <Regex>
+        <![CDATA[<customErrors xdt:Transform="Replace" mode="RemoteOnly" />]]>
+      </Regex>
+      <Location>web.config</Location>
+    </Rule>
+  </Rules>
+</RuleCollection>
