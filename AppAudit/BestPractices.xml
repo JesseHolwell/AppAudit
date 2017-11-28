@@ -1,13 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<!--{
-  string regex { get; set; } //String to match
-  string location { get; set; } //File to search
-  int priority { get; set; } //1-4 priority
-  string description { get; set; } //Explanation
-}-->
 
-<RuleCollection>
+<FileCollection>
+  <Files>
+    <AuditFile Name="web.config">
+      <Rules>
+        <Rule Description="Avoid woff2 errors">
+          <Regex>
+            <![CDATA[woff2]]>
+          </Regex>
+        </Rule>
+        <Rule></Rule>
+      </Rules>
+    </AuditFile>
+    <AuditFile>
+      <Rules>
+        <Rule></Rule>
+        <Rule></Rule>
+      </Rules>
+    </AuditFile>
+  </Files>
+</FileCollection>
+
+<!--<RuleCollection>
   <Rules>
     <Rule>
       <Regex>
@@ -45,4 +60,4 @@
       <Description>Redirect to Https</Description>
     </Rule>
   </Rules>
-</RuleCollection>
+</RuleCollection>-->
