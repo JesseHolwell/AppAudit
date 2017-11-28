@@ -14,12 +14,14 @@
         <![CDATA[Woff2]]>
       </Regex>
       <Location>web.config</Location>
+      <Description>Ignore woff2 errors</Description>
     </Rule>
     <Rule>
       <Regex>
         <![CDATA[<customErrors xdt:Transform="Replace" mode="RemoteOnly" />]]>
       </Regex>
       <Location>web.config</Location>
+      <Description>custom errors</Description>
     </Rule>
   </Rules>
 </RuleCollection>

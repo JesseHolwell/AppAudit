@@ -14,6 +14,10 @@ namespace AppAudit
         [System.Xml.Serialization.XmlElement("Location")]
         public string Location { get; set; }
 
+        //Human-readable description
+        [System.Xml.Serialization.XmlElement("Description")]
+        public string Description { get; set; }
+
         //Low medium high
         //Priority
 

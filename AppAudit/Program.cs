@@ -26,6 +26,10 @@ namespace AppAudit
             //search this location for any relevant files
             //identified:
             //web.configs
+            var debugconfig = "web.config";
+            var stagingconfig = "web.staging.config";
+            var releaseconfig = "web.release.config";
+
             //app_start
             //...
 
@@ -34,8 +38,8 @@ namespace AppAudit
                 //TODO: better file identification logic?
                 //Console.WriteLine(path); // full path
                 //Console.WriteLine(System.IO.Path.GetFileName(path)); // file name
-                if (path.ToLower().Contains("web.config")) 
-                    DebugAnalysis(path);
+                if (path.ToLower().Contains(debugconfig)) 
+                    DebugAnalysis(path, debugconfig);
             }
 
             //TODO: graceful loop or exit
@@ -43,23 +47,19 @@ namespace AppAudit
 
         }
 
-        public static void DebugAnalysis(string path)
+        public static void DebugAnalysis(string path, string file)
         {
-            var file = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path);
 
-            foreach (var rule in AppRules.Rules)
+            foreach (var rule in AppRules.Rules.Where(x=>x.Location == file))
             {
                 var matched = false;
 
-                //var regex = new Regex("woff2");
-                //foreach (var line in file)
-                //    if (Regex.IsMatch(line, "woff2"))
-                //        matched = true;
+                foreach (var line in lines)
+                    if (Regex.IsMatch(line, rule.Regex))
+                        matched = true;
 
-                //if (matched == false)
-                //    Console.WriteLine("Woff is missing");
-                //else
-                //    Console.WriteLine("Woff is present");
+                Console.WriteLine(rule.Description + ":\t" + matched);
             }
 
         }
