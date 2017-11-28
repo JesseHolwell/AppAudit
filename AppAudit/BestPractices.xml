@@ -10,54 +10,30 @@
             <![CDATA[woff2]]>
           </Regex>
         </Rule>
-        <Rule></Rule>
+        <Rule Description="custom errors in debug">
+          <Regex>
+            <![CDATA[<customErrors mode="Off" />]]>
+          </Regex>
+        </Rule>
       </Rules>
     </AuditFile>
-    <AuditFile>
+    <AuditFile Name="web.release.config">
       <Rules>
-        <Rule></Rule>
-        <Rule></Rule>
+        <Rule Description="Test release error">
+          <Regex>
+            <![CDATA[Sample release regex]]>
+          </Regex>
+        </Rule>
+      </Rules>
+    </AuditFile>
+    <AuditFile Name="web.staging.config">
+      <Rules>
+        <Rule Description="Test error">
+          <Regex>
+            <![CDATA[Sample staging regex]]>
+          </Regex>
+        </Rule>
       </Rules>
     </AuditFile>
   </Files>
 </FileCollection>
-
-<!--<RuleCollection>
-  <Rules>
-    <Rule>
-      <Regex>
-        <![CDATA[woff2]]>
-      </Regex>
-      <Location>web.config</Location>
-      <Description>Avoid woff2 errors in browser</Description>
-    </Rule>
-    <Rule>
-      <Regex>
-        <![CDATA[<customErrors mode="Off" />]]>
-      </Regex>
-      <Location>web.config</Location>
-      <Description>custom errors in debug</Description>
-    </Rule>
-    <Rule>
-      <Regex>
-        <![CDATA[<customErrors xdt:Transform="Replace" mode="RemoteOnly" />]]>
-      </Regex>
-      <Location>web.release.config</Location>
-      <Description>custom errors in release</Description>
-    </Rule>
-    <Rule>
-      <Regex>
-        <![CDATA[<meta http-equiv="X-UA-Compatible" content="IE=edge" />]]>
-      </Regex>
-      <Location>_layout.cshtml</Location>
-      <Description>Stop IE using older version</Description>
-    </Rule>
-    <Rule>
-      <Regex>
-        <![CDATA[<action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="SeeOther"/>]]>
-      </Regex>
-      <Location>web.release.config</Location>
-      <Description>Redirect to Https</Description>
-    </Rule>
-  </Rules>
-</RuleCollection>-->
