@@ -29,21 +29,29 @@ namespace AppAudit
                 var appLocation = Console.ReadLine();
 
                 //HACK: 
-                appLocation = @"C:\Users\holweje\Source\Repos\Divestment\Divestment";
+                //appLocation = @"C:\Users\holweje\Source\Repos\Divestment\Divestment";
+                if (Directory.Exists(appLocation))
+                {
 
-                var locatedFiles = Directory.GetFiles(appLocation);
+                    var locatedFiles = Directory.GetFiles(appLocation);
 
-                //TODO: better file identification logic?
-                Console.WriteLine("=== ANALYZING PROJECT: "
-                    + Path.GetDirectoryName(appLocation) + " ===");
-                Console.WriteLine("Files found:");
-                foreach (var path in locatedFiles)
-                    Console.WriteLine("\t- " + Path.GetFileName(path));
+                    //TODO: better file identification logic?
+                    Console.WriteLine("=== ANALYZING PROJECT: "
+                        + Path.GetDirectoryName(appLocation) + " ===");
+                    //Console.WriteLine("Files found:");
+                    //foreach (var path in locatedFiles)
+                    //    Console.WriteLine("\t- " + Path.GetFileName(path));
 
-                foreach (var path in locatedFiles)
-                    foreach (var config in AppRules.Files)
-                        if (path.ToLower().Contains(config.Name))
-                            AnalyzeFile(path, config.Name);
+                    foreach (var path in locatedFiles)
+                        foreach (var config in AppRules.Files)
+                            if (path.ToLower().Contains(config.Name))
+                                AnalyzeFile(path, config.Name);
+
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: directory not found");
+                }
 
                 //TODO: more graceful loop or exit
                 Console.WriteLine("\nExit? (X))");
@@ -55,7 +63,7 @@ namespace AppAudit
 
         public static void AnalyzeFile(string path, string filename)
         {
-            var lines = File.ReadAllLines(path);
+            var lines = File.ReadAllText(path);
 
             //var ruleScope = AppRules.Rules.Where(x => x.Location == file);
             foreach (var file in AppRules.Files)
@@ -70,8 +78,8 @@ namespace AppAudit
                         {
                             var matched = false;
 
-                            foreach (var line in lines)
-                                if (Regex.IsMatch(line, rule.Regex))
+                            //foreach (var line in lines)
+                                if (Regex.IsMatch(lines, rule.Regex))
                                     matched = true;
 
                             Console.BackgroundColor = (matched) ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;

@@ -7,33 +7,86 @@
       <Rules>
         <Rule Description="Avoid woff2 errors">
           <Regex>
-            <![CDATA[woff2]]>
+            <![CDATA[<staticContent>\s*<remove\sfileExtension="\.woff2"\s*\/>\s*<mimeMap\s*fileExtension="[.]woff2"\s*mimeType="font\/woff2"\s*\/>\s*<\/staticContent>]]>
           </Regex>
         </Rule>
-        <Rule Description="custom errors in debug">
+        <Rule Description="No custom errors">
           <Regex>
-            <![CDATA[<customErrors mode="Off" />]]>
+            <![CDATA[<customErrors\s*mode="Off"\s*(\/>|>(\s*.*\s*)<\/customErrors>)]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Save emails to temp">
+          <Regex>
+            <![CDATA[<mailSettings>\s*<smtp\s*deliveryMethod="SpecifiedPickupDirectory"\s*from=".*">\s*<network\s*host="mail\.sweeneyresearch\.com\.au"\s*defaultCredentials="true"\s*\/>\s*<specifiedPickupDirectory\s*pickupDirectoryLocation="C:\\temp\\"\s*\/>\s*<\/smtp>\s*<\/mailSettings>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="NLog handler">
+          <Regex>
+            <![CDATA[<section\s*name="nlog"\s*type="NLog\.Config\.ConfigSectionHandler,\s*NLog"\s*\/>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="NLog configuration">
+          <Regex>
+            <![CDATA[<nlog>\s*<targets>(\s|\S)*<\/targets>(\s|\S)*<rules>(\s|\S)*<\/rules>\s*<\/nlog>]]>
           </Regex>
         </Rule>
       </Rules>
     </AuditFile>
     <AuditFile Name="web.release.config">
       <Rules>
-        <Rule Description="Test release error">
+        <Rule Description="Custom errors">
           <Regex>
-            <![CDATA[Sample release regex]]>
+            <![CDATA[<customErrors\s*(?=(.*xdt:Transform="Replace"))(?=(.*mode="RemoteOnly")).*\s*>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Redirect to HTTPS">
+          <Regex>
+            <![CDATA[<rules>\s*.*\s*<rule\s*name="Redirect to HTTPS"\s*stopProcessing="true">\s*<match\s*url="\((.*)\)"\s*\/>\s*<conditions>\s*<add\s*input="{HTTPS}"\s*pattern="(.*)"\s*\/>\s*<\/conditions>\s*<action\s*type="Redirect"\s*url="https:\/\/{HTTP_HOST}\/{R:1}"\s*redirectType="SeeOther"\s*\/>\s*<\/rule>\s*.*\s*<\/rules>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Filter out common elmah errors">
+          <Regex>
+            <![CDATA[<errorFilter>\s*<test>\s*<or>\s*<regex\s*binding="Exception\.Message"\s*pattern="(.*)"\s*\/>\s*<regex\s*binding="BaseException"\s*pattern="System\.Web\.Mvc\.HttpAntiForgeryException"\s*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Log elmah errors to database">
+          <Regex>
+            <![CDATA[<add\s*name="elmah-sql"\s*connectionString="Data Source=WPMPSWEDBS01;Initial Catalog=ELMAH;User Id=elmah;Password=elmah1;"\s*providerName="System\.Data\.SqlClient"\s*xdt:Transform="Insert"\s*\/>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Email elmah errors">
+          <Regex>
+            <![CDATA[<elmah\s*xdt:Transform="Insert">\s*(.*)<errorLog\s*type="Elmah\.SqlErrorLog, Elmah"\s*connectionStringName="elmah-sql"\s*\/>\s*<errorMail\s*from="(.*)"\s*to="(.*)"\s*subject="Web Application Error (.*)"\s*async="(.*)"\s*(.*)\s*\/>\s*<errorFilter>\s*<test>\s*<or>\s*<regex\s*.*\/>\s*<regex\s*.*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>\s*<\/elmah>]]>
           </Regex>
         </Rule>
       </Rules>
     </AuditFile>
     <AuditFile Name="web.staging.config">
       <Rules>
-        <Rule Description="Test error">
+        <Rule Description="Staging config present">
           <Regex>
-            <![CDATA[]]>
+            <![CDATA[\s*]]>
           </Regex>
         </Rule>
       </Rules>
     </AuditFile>
+    <!--<AuditFile Name="Views/Shared/_Layout.cshtml">
+      <Rules>
+        <Rule Description="IE use most recent version">
+          <Regex>
+            <![CDATA[<meta http-equiv="X-UA-Compatible" content="IE=edge" />]]>
+          </Regex>
+        </Rule>
+      </Rules>
+    </AuditFile>
+    <AuditFile Name="ProjectName.DB">
+      <Rules>
+        <Rule Description="Database project">
+          <Regex>
+            <![CDATA[...]]>
+          </Regex>
+        </Rule>
+      </Rules>
+    </AuditFile>-->
   </Files>
 </FileCollection>
