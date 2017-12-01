@@ -30,6 +30,31 @@
             <![CDATA[<nlog>\s*<targets>(\s|\S)*<\/targets>(\s|\S)*<rules>(\s|\S)*<\/rules>\s*<\/nlog>]]>
           </Regex>
         </Rule>
+        <Rule Description="Local mail settings">
+          <Regex>
+            <![CDATA[<mailSettings>\s*<smtp\s*deliveryMethod="SpecifiedPickupDirectory"\s*from=".*">\s*<network\s*host="mail\.sweeneyresearch\.com\.au"\s*defaultCredentials="true"\s*\/>\s*<specifiedPickupDirectory\s*pickupDirectoryLocation="C:\\temp\\"\s*\/>\s*<\/smtp>\s*<\/mailSettings>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Local elmah settings">
+          <Regex>
+            <![CDATA[<elmah>\s*<errorMail\s*from=".*"\s*to=".*"\s*subject="Web\s*Application\s*Error.*"\s*async="(true|false)"\s*\/>\s*<\/elmah>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Disable version header (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Handler tag exists (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Disable XSS (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
       </Rules>
     </AuditFile>
     <AuditFile Name="web.release.config">
@@ -41,12 +66,12 @@
         </Rule>
         <Rule Description="Redirect to HTTPS">
           <Regex>
-            <![CDATA[<rules>\s*.*\s*<rule\s*name="Redirect to HTTPS"\s*stopProcessing="true">\s*<match\s*url="\((.*)\)"\s*\/>\s*<conditions>\s*<add\s*input="{HTTPS}"\s*pattern="(.*)"\s*\/>\s*<\/conditions>\s*<action\s*type="Redirect"\s*url="https:\/\/{HTTP_HOST}\/{R:1}"\s*redirectType="SeeOther"\s*\/>\s*<\/rule>\s*.*\s*<\/rules>]]>
+            <![CDATA[<rule\s*name="Redirect to HTTPS"\s*stopProcessing="true">\s*<match\s*url="(.*)"\s*\/>\s*<conditions>\s*<add\s*input="{HTTPS}"\s*pattern="(.*)"\s*\/>\s*<\/conditions>\s*<action\s*type="Redirect"\s*url="https:\/\/{HTTP_HOST}\/{R:1}"\s*redirectType="SeeOther"\s*\/>\s*<\/rule>]]>
           </Regex>
         </Rule>
         <Rule Description="Filter out common elmah errors">
           <Regex>
-            <![CDATA[<errorFilter>\s*<test>\s*<or>\s*<regex\s*binding="Exception\.Message"\s*pattern="(.*)"\s*\/>\s*<regex\s*binding="BaseException"\s*pattern="System\.Web\.Mvc\.HttpAntiForgeryException"\s*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>]]>
+            <![CDATA[<errorFilter>\s*<test>\s*<or>\s*(?=(.*<regex\s*binding="BaseException"\s*pattern="System\.Web\.Mvc\.HttpAntiForgeryException"\s*\/>)).*\s*(?=(.*<regex\s*binding="Exception\.Message"\s*pattern="(.*)"\s*\/>)).*\s*<\/or>\s*<\/test>\s*<\/errorFilter>]]>
           </Regex>
         </Rule>
         <Rule Description="Log elmah errors to database">
@@ -56,7 +81,37 @@
         </Rule>
         <Rule Description="Email elmah errors">
           <Regex>
-            <![CDATA[<elmah\s*xdt:Transform="Insert">\s*(.*)<errorLog\s*type="Elmah\.SqlErrorLog, Elmah"\s*connectionStringName="elmah-sql"\s*\/>\s*<errorMail\s*from="(.*)"\s*to="(.*)"\s*subject="Web Application Error (.*)"\s*async="(.*)"\s*(.*)\s*\/>\s*<errorFilter>\s*<test>\s*<or>\s*<regex\s*.*\/>\s*<regex\s*.*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>\s*<\/elmah>]]>
+            <![CDATA[<elmah\s*xdt:Transform="(Replace|Insert)">\s*(.*)\s*<errorLog\s*type="Elmah\.SqlErrorLog, Elmah"\s*connectionStringName="elmah-sql"\s*\/>\s*<errorMail\s*from="(.*)"\s*to="(.*)"\s*subject="Web Application Error (.*)"\s*async="(.*)"\s*(.*)\s*\/>\s*<errorFilter>\s*<test>\s*<or>\s*<regex\s*.*\/>\s*<regex\s*.*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>\s*<\/elmah>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Remove headers (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Http Errors (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="NotFoundMVC (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Avoid 500 errors (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Disable unused handlers (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="SSL Cookies (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
           </Regex>
         </Rule>
       </Rules>
@@ -70,23 +125,47 @@
         </Rule>
       </Rules>
     </AuditFile>
-    <!--<AuditFile Name="Views/Shared/_Layout.cshtml">
+    <AuditFile Name="Global.asax">
       <Rules>
-        <Rule Description="IE use most recent version">
+        <Rule Description="Disable MVC Response header (NA)">
           <Regex>
-            <![CDATA[<meta http-equiv="X-UA-Compatible" content="IE=edge" />]]>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Disable XSS (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="No Cache Attribute (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
           </Regex>
         </Rule>
       </Rules>
     </AuditFile>
-    <AuditFile Name="ProjectName.DB">
+    <AuditFile Name=".DB">
       <Rules>
-        <Rule Description="Database project">
+        <Rule Description="Database present (NA)">
           <Regex>
-            <![CDATA[...]]>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="DB target platform (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
           </Regex>
         </Rule>
       </Rules>
-    </AuditFile>-->
+    </AuditFile>
+    <AuditFile Name="_Layout.cshtml">
+      <Rules>
+        <Rule Description="Prevent IE defaulting to older version (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+      </Rules>
+    </AuditFile>
   </Files>
 </FileCollection>
