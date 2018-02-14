@@ -12,7 +12,7 @@
         </Rule>
         <Rule Description="No custom errors">
           <Regex>
-            <![CDATA[<customErrors\s*mode="Off"\s*(\/>|>(\s*.*\s*)<\/customErrors>)]]>
+            <![CDATA[<customErrors\s*mode="(Off|RemoteOnly)"\s*(\/>|>(\s*.*\s*)<\/customErrors>)]]>
           </Regex>
         </Rule>
         <Rule Description="Save emails to temp">
@@ -40,19 +40,19 @@
             <![CDATA[<elmah>\s*<errorMail\s*from=".*"\s*to=".*"\s*subject="Web\s*Application\s*Error.*"\s*async="(true|false)"\s*\/>\s*<\/elmah>]]>
           </Regex>
         </Rule>
-        <Rule Description="Disable version header (NA)">
+        <Rule Description="Disable version header">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<httpRuntime.*enableVersionHeader="false".*\/>]]>
           </Regex>
         </Rule>
-        <Rule Description="Handler tag exists (NA)">
+        <Rule Description="Handler tag exists">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<handlers\s*\/>]]>
           </Regex>
         </Rule>
-        <Rule Description="Disable XSS (NA)">
+        <Rule Description="Disable XSS">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<httpProtocol>\s*<customHeaders>\s*<add\s*name="X-Frame-Options"\s*value="SAMEORIGIN"\s*\/>\s*<\/customHeaders>\s*<\/httpProtocol>]]>
           </Regex>
         </Rule>
       </Rules>
@@ -84,34 +84,24 @@
             <![CDATA[<elmah\s*xdt:Transform="(Replace|Insert)">\s*(.*)\s*<errorLog\s*type="Elmah\.SqlErrorLog, Elmah"\s*connectionStringName="elmah-sql"\s*\/>\s*<errorMail\s*from="(.*)"\s*to="(.*)"\s*subject="Web Application Error (.*)"\s*async="(.*)"\s*(.*)\s*\/>\s*<errorFilter>\s*<test>\s*<or>\s*<regex\s*.*\/>\s*<regex\s*.*\/>\s*<\/or>\s*<\/test>\s*<\/errorFilter>\s*<\/elmah>]]>
           </Regex>
         </Rule>
-        <Rule Description="Remove headers (NA)">
+        <Rule Description="Remove headers">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<outboundRules>\s*<rule\s*name="replace server header"\s*patternSyntax="Wildcard">\s*<match\s*serverVariable="RESPONSE_SERVER"\s*pattern="\*"\/>\s*<action\s*type="Rewrite" value=""\/>\s*<\/rule>\s*<\/outboundRules>]]>
           </Regex>
         </Rule>
-        <Rule Description="Http Errors (NA)">
+        <Rule Description="Avoid 500 errors">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<httpErrors>\s*<error\s*xdt:Transform="Insert"\s*statusCode="500"\s*path="\/"\s*responseMode="Redirect"\/>\s*<\/httpErrors>]]>
           </Regex>
         </Rule>
-        <Rule Description="NotFoundMVC (NA)">
+        <Rule Description="Disable unused handlers">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<handlers>\s*<remove\s*xdt:Transform="Insert"\s*name="TraceHandler-Integrated"\s*\/>\s*<remove\s*xdt:Transform="Insert"\s*name="TraceHandler-Integrated-4\.0"\s*\/>\s*<remove\s*xdt:Transform="Insert"\s*name="AssemblyResourceLoader-Integrated-4\.0"\s*\/>\s*<remove\s*xdt:Transform="Insert"\s*name="AssemblyResourceLoader-Integrated"\s*\/>\s*<remove\s*xdt:Transform="Insert"\s*name="ScriptResourceIntegrated-4\.0"\s*\/>\s*<\/handlers>]]>
           </Regex>
         </Rule>
-        <Rule Description="Avoid 500 errors (NA)">
+        <Rule Description="SSL Cookies">
           <Regex>
-            <![CDATA[<TODO: writeme>]]>
-          </Regex>
-        </Rule>
-        <Rule Description="Disable unused handlers (NA)">
-          <Regex>
-            <![CDATA[<TODO: writeme>]]>
-          </Regex>
-        </Rule>
-        <Rule Description="SSL Cookies (NA)">
-          <Regex>
-            <![CDATA[<TODO: writeme>]]>
+            <![CDATA[<httpCookies\s*xdt:Transform="Insert"\s*requireSSL="true"\s*\/>]]>
           </Regex>
         </Rule>
       </Rules>
@@ -152,6 +142,11 @@
           </Regex>
         </Rule>
         <Rule Description="DB target platform (NA)">
+          <Regex>
+            <![CDATA[<TODO: writeme>]]>
+          </Regex>
+        </Rule>
+        <Rule Description="Data seed (NA)">
           <Regex>
             <![CDATA[<TODO: writeme>]]>
           </Regex>
